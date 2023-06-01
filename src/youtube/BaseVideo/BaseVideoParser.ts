@@ -13,9 +13,14 @@ export class BaseVideoParser {
 		target.id = videoInfo.videoDetails.videoId;
 		target.title = videoInfo.videoDetails.title;
 		target.uploadDate = videoInfo.dateText.simpleText;
+		target.uploadDateNoTz = videoInfo.microformat.playerMicroformatRenderer.uploadDate;
 		target.viewCount = +videoInfo.videoDetails.viewCount || null;
 		target.isLiveContent = videoInfo.videoDetails.isLiveContent;
 		target.thumbnails = new Thumbnails().load(videoInfo.videoDetails.thumbnail.thumbnails);
+
+		const { endpoint, title: gameTitle } = videoInfo.metadataRowContainer?.metadataRowContainerRenderer?.rows?.at(0)?.richMetadataRowRenderer?.contents?.at(0)?.richMetadataRenderer || {};
+		target.gameChannelId = endpoint?.browseEndpoint?.browseId || null;
+		target.gameName = gameTitle?.simpleText || null;
 
 		// Channel
 		const { title, thumbnail, subscriberCountText } = videoInfo.owner.videoOwnerRenderer;
@@ -79,8 +84,8 @@ export class BaseVideoParser {
 		const secondaryInfo = contents.find(
 			(c: YoutubeRawData) => "videoSecondaryInfoRenderer" in c
 		).videoSecondaryInfoRenderer;
-		const videoDetails = data[2].playerResponse.videoDetails;
-		return { ...secondaryInfo, ...primaryInfo, videoDetails };
+		const { videoDetails, microformat } = data[2].playerResponse;
+		return { ...secondaryInfo, ...primaryInfo, videoDetails, microformat };
 	}
 
 	private static parseCompactRenderer(

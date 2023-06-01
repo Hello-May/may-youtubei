@@ -18,6 +18,9 @@ export interface BaseVideoProperties extends BaseProperties {
 	likeCount?: number | null;
 	isLiveContent?: boolean;
 	tags?: string[];
+	uploadDateNoTz?: string;
+	gameChannelId?: string;
+	gameName?: string;
 }
 
 /** Represents a Video  */
@@ -41,6 +44,12 @@ export class BaseVideo extends Base implements BaseVideoProperties {
 	isLiveContent!: boolean;
 	/** The tags of this video */
 	tags!: string[];
+	/** The date without time zone this video is uploaded at */
+	uploadDateNoTz!: string;
+	/** The game's channel id that this video related */
+	gameChannelId!: string;
+	/** The game's name id that this video related */
+	gameName!: string;
 	/** Continuable of videos / playlists related to this video  */
 	related: VideoRelated;
 
